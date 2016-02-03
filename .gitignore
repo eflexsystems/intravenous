@@ -9,7 +9,6 @@ _ReSharper*
 desktop.ini
 .eprj
 perf/*
-build/output/lib
 build/output/*.nu*
 build/output/*.json*
 build/output/*.tgz*
