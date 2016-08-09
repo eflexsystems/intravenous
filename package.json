@@ -1,0 +1,32 @@
+{
+  "name": "intravenous",
+  "directories": {
+	"lib": "./lib"
+  },
+  "main": "./lib/intravenous.js",
+  "version": "0.1.6-beta",
+  "description": "Lightweight dependency injection for Javascript",
+  "homepage": "http://royjacobs.github.com/intravenous/",
+  "keywords": [
+    "di",
+    "ioc",
+    "injection"
+  ],
+  "author": "Roy Jacobs <hello@royjacobs.org> (http://www.royjacobs.org)",
+  "license": "MIT",
+  "repositories": [
+    {
+      "type": "git",
+      "url": "https://github.com/dorr-fg/intravenous"
+    }
+  ],
+  "dependencies": {},
+  "devDependencies": {},
+  "engines": {
+    "node": "*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/dorr-fg/intravenous.git"
+  }
+}
