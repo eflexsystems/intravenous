@@ -57,7 +57,12 @@
 		},
 
 		release: function(cacheItem) {
-			return !--this.refCounts[cacheItem.tag][cacheItem.registration.key];
+			var canRelease = !--this.refCounts[cacheItem.tag][cacheItem.registration.key];;
+
+			if(canRelease) {
+				this.cache.splice(this.cache.indexOf(cacheItem), 1);
+			}
+			return canRelease;
 		},
 
 		resolveStarted: function(key) {
@@ -98,7 +103,13 @@
 		},
 
 		release: function(cacheItem) {
-			return !--this.refCounts[cacheItem.registration.key];
+			var canRelease = !--this.refCounts[cacheItem.registration.key];
+
+			if(canRelease) {
+				this.cache.splice(this.cache.indexOf(cacheItem), 1);
+			}
+			return canRelease;
+
 		},
 
 		resolveStarted: function(key) {
@@ -395,8 +406,11 @@
 
 			if (this.parent) {
 				var index = this.parent.children.indexOf(this);
-				this.parent.children.splice(index, 1);
+				if(index !== -1) {
+					this.parent.children.splice(index, 1);
+				}
 			}
+			
 			return true;
 		},
 
