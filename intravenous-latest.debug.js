@@ -1,4 +1,4 @@
-// Intravenous JavaScript library v0.1.8-beta
+// Intravenous JavaScript library v0.1.9-beta
 // (c) Roy Jacobs
 // License: MIT (http://www.opensource.org/licenses/mit-license.php)
 
@@ -30,7 +30,7 @@ var exportSymbol = function(path, object) {
 var exportProperty = function(owner, publicName, object) {
   owner[publicName] = object;
 };
-intravenous.version = "0.1.8-beta";
+intravenous.version = "0.1.9-beta";
 exportSymbol('version', intravenous.version);
 (function() {
 	"use strict";
@@ -91,7 +91,12 @@ exportSymbol('version', intravenous.version);
 		},
 
 		release: function(cacheItem) {
-			return !--this.refCounts[cacheItem.tag][cacheItem.registration.key];
+			var canRelease = !--this.refCounts[cacheItem.tag][cacheItem.registration.key];;
+
+			if(canRelease) {
+				this.cache.splice(this.cache.indexOf(cacheItem), 1);
+			}
+			return canRelease;
 		},
 
 		resolveStarted: function(key) {
@@ -132,7 +137,13 @@ exportSymbol('version', intravenous.version);
 		},
 
 		release: function(cacheItem) {
-			return !--this.refCounts[cacheItem.registration.key];
+			var canRelease = !--this.refCounts[cacheItem.registration.key];
+
+			if(canRelease) {
+				this.cache.splice(this.cache.indexOf(cacheItem), 1);
+			}
+			return canRelease;
+
 		},
 
 		resolveStarted: function(key) {
@@ -429,8 +440,11 @@ exportSymbol('version', intravenous.version);
 
 			if (this.parent) {
 				var index = this.parent.children.indexOf(this);
-				this.parent.children.splice(index, 1);
+				if(index !== -1) {
+					this.parent.children.splice(index, 1);
+				}
 			}
+			
 			return true;
 		},
 
