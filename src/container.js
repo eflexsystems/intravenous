@@ -121,7 +121,7 @@
 		},
 
 		release: function(cacheItem) {
-			delete this.cache[cacheItem];
+			this.cache.splice(this.cache.indexOf(cacheItem), 1);
 			return true;
 		},
 

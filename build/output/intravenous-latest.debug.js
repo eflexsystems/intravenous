@@ -1,4 +1,4 @@
-// Intravenous JavaScript library v0.1.5-beta
+// Intravenous JavaScript library v0.1.6-beta
 // (c) Roy Jacobs
 // License: MIT (http://www.opensource.org/licenses/mit-license.php)
 
@@ -30,7 +30,7 @@ var exportSymbol = function(path, object) {
 var exportProperty = function(owner, publicName, object) {
   owner[publicName] = object;
 };
-intravenous.version = "0.1.5-beta";
+intravenous.version = "0.1.6-beta";
 exportSymbol('version', intravenous.version);
 (function() {
 	"use strict";
@@ -155,7 +155,7 @@ exportSymbol('version', intravenous.version);
 		},
 
 		release: function(cacheItem) {
-			delete this.cache[cacheItem];
+			this.cache.splice(this.cache.indexOf(cacheItem), 1);
 			return true;
 		},
 
