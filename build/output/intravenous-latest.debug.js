@@ -126,7 +126,7 @@ exportSymbol('version', intravenous.version);
 				var i = this.cache[t];
 				if (i.registration.key === key) {
 					if (!i.instance) break;
-					this.increaseRefCount(i);
+					this.set(i);
 					return i.instance;
 				}
 			}
@@ -144,7 +144,7 @@ exportSymbol('version', intravenous.version);
 			if(this.cache.indexOf(cacheItem) === -1) {
 				this.cache.push(cacheItem);
 			}
-			
+
 			console.log('singletonLifecycle.set: cache size: ' + this.cache.length);
 			this.increaseRefCount(cacheItem);
 		},
