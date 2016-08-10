@@ -85,7 +85,7 @@ exportSymbol('version', intravenous.version);
 		set: function(cacheItem) {
 			if(this.cache.indexOf(cacheItem) === -1) {
 				this.cache.push(cacheItem);
-				console.log('perRequestLifecycle.set: cache size: ' + this.cache.length);
+				//console.log('perRequestLifecycle.set: cache size: ' + this.cache.length);
 				cacheItem.tag = this.tag;
 			}
 
@@ -94,12 +94,12 @@ exportSymbol('version', intravenous.version);
 		},
 
 		release: function(cacheItem) {
-			var canRelease = !--this.refCounts[cacheItem.tag][cacheItem.registration.key];
+			var canRelease = this.refCounts[cacheItem.tag][cacheItem.registration.key] === undefined || (!--this.refCounts[cacheItem.tag][cacheItem.registration.key]);
 
 			if(canRelease) {
 				this.cache.splice(this.cache.indexOf(cacheItem), 1);
 				delete this.refCounts[cacheItem.tag][cacheItem.registration.key];
-				console.log('perRequestLifecycle.release: cache size: ' + this.cache.length);
+				//console.log('perRequestLifecycle.release: cache size: ' + this.cache.length);
 			}
 			return canRelease;
 		},
@@ -136,26 +136,22 @@ exportSymbol('version', intravenous.version);
 			else return null;
 		},
 
-		increaseRefCount : function(cacheItem) {
-			this.refCounts[cacheItem.registration.key] = this.refCounts[cacheItem.registration.key]+1 || 1;
-		},
-
 		set: function(cacheItem) {
 			if(this.cache.indexOf(cacheItem) === -1) {
 				this.cache.push(cacheItem);
 			}
 
-			console.log('singletonLifecycle.set: cache size: ' + this.cache.length);
-			this.increaseRefCount(cacheItem);
+			//console.log('singletonLifecycle.set: cache size: ' + this.cache.length);
+			this.refCounts[cacheItem.registration.key] = this.refCounts[cacheItem.registration.key]+1 || 1;
 		},
 
 		release: function(cacheItem) {
-			var canRelease = !--this.refCounts[cacheItem.registration.key];
+			var canRelease = this.refCounts[cacheItem.registration.key] === undefined || (!--this.refCounts[cacheItem.registration.key]);
 
 			if(canRelease) {
 				this.cache.splice(this.cache.indexOf(cacheItem), 1);
 				delete this.refCounts[cacheItem.registration.key];
-				console.log('singletonLifecycle.release: cache size: ' + this.cache.length);
+				//console.log('singletonLifecycle.release: cache size: ' + this.cache.length);
 			}
 			return canRelease;
 
@@ -178,7 +174,7 @@ exportSymbol('version', intravenous.version);
 
 		set: function(cacheItem) {
 			// why add anything to the unique cache when there's no fucking reuse? c'mon man!!!!
-			console.log('uniqueLifecycle.set: cache size: ' + this.cache.length);
+			//console.log('uniqueLifecycle.set: cache size: ' + this.cache.length);
 			if(this.cache.indexOf(cacheItem) === -1) {
 				this.cache.push(cacheItem);
 			}
@@ -186,7 +182,7 @@ exportSymbol('version', intravenous.version);
 
 		release: function(cacheItem) {
 			this.cache.splice(this.cache.indexOf(cacheItem), 1);
-			console.log('uniqueLifecycle.release: cache size: ' + this.cache.length);
+			//console.log('uniqueLifecycle.release: cache size: ' + this.cache.length);
 			return true;
 		},
 
@@ -466,7 +462,7 @@ exportSymbol('version', intravenous.version);
 				}
 			}
 		
-		/* DOR WAS HERE 2 */	
+		/* DOR WAS HERE 3 */	
 /*			this.lifecycles = null;
 
 */			return true;
