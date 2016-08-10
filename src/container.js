@@ -425,10 +425,11 @@
 				var index = this.parent.children.indexOf(this);
 				if(index !== -1) {
 					this.parent.children.splice(index, 1);
+					console.log('removed child. new length: ' + this.parent.children.length);
 				}
 			}
 		
-		/* DOR WAS HERE 3 */	
+		/* DOR WAS HERE 444 */	
 /*			this.lifecycles = null;
 
 */			return true;
