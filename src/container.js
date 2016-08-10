@@ -92,7 +92,7 @@
 				var i = this.cache[t];
 				if (i.registration.key === key) {
 					if (!i.instance) break;
-					this.set(i);
+					this.increaseRefCount(i);
 					return i.instance;
 				}
 			}
@@ -102,12 +102,17 @@
 			else return null;
 		},
 
+		increaseRefCount : function(cacheItem) {
+			this.refCounts[cacheItem.registration.key] = this.refCounts[cacheItem.registration.key]+1 || 1;
+		},
+
 		set: function(cacheItem) {
 			if(this.cache.indexOf(cacheItem) === -1) {
 				this.cache.push(cacheItem);
 			}
+			
 			console.log('singletonLifecycle.set: cache size: ' + this.cache.length);
-			this.refCounts[cacheItem.registration.key] = this.refCounts[cacheItem.registration.key]+1 || 1;
+			this.increaseRefCount(cacheItem);
 		},
 
 		release: function(cacheItem) {
@@ -427,7 +432,7 @@
 				}
 			}
 		
-		/* DOR WAS HERE */	
+		/* DOR WAS HERE 2 */	
 /*			this.lifecycles = null;
 
 */			return true;
