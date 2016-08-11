@@ -49,6 +49,7 @@
 		},
 
 		set: function(cacheItem) {
+			console.log('perRequestLifecycle: set: ' + cacheItem.registration.key + ', tag: ' + this.tag +', add?: ' + (this.cache.indexOf(cacheItem) === -1));
 			if(this.cache.indexOf(cacheItem) === -1) {
 				this.cache.push(cacheItem);
 				//console.log('perRequestLifecycle.set: cache size: ' + this.cache.length);
@@ -103,6 +104,7 @@
 		},
 
 		set: function(cacheItem) {
+			console.log('singletonLifecycle: set: ' + cacheItem.registration.key + ',add?: ' + (this.cache.indexOf(cacheItem) === -1));
 			if(this.cache.indexOf(cacheItem) === -1) {
 				this.cache.push(cacheItem);
 			}
@@ -139,6 +141,7 @@
 		},
 
 		set: function(cacheItem) {
+			console.log('uniqueLifecycle: set: ' + cacheItem.registration.key + ',add?: ' + (this.cache.indexOf(cacheItem) === -1));
 			// why add anything to the unique cache when there's no fucking reuse? c'mon man!!!!
 			//console.log('uniqueLifecycle.set: cache size: ' + this.cache.length);
 			if(this.cache.indexOf(cacheItem) === -1) {
