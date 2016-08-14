@@ -49,10 +49,8 @@
 		},
 
 		set: function(cacheItem) {
-			console.log('perRequestLifecycle: set: ' + cacheItem.registration.key + ', tag: ' + this.tag +', add?: ' + (this.cache.indexOf(cacheItem) === -1));
 			if(this.cache.indexOf(cacheItem) === -1) {
 				this.cache.push(cacheItem);
-				//console.log('perRequestLifecycle.set: cache size: ' + this.cache.length);
 				cacheItem.tag = this.tag;
 			}
 
@@ -66,7 +64,6 @@
 			if(canRelease) {
 				this.cache.splice(this.cache.indexOf(cacheItem), 1);
 				delete this.refCounts[cacheItem.tag][cacheItem.registration.key];
-				//console.log('perRequestLifecycle.release: cache size: ' + this.cache.length);
 			}
 			return canRelease;
 		},
@@ -104,12 +101,10 @@
 		},
 
 		set: function(cacheItem) {
-			console.log('singletonLifecycle: set: ' + cacheItem.registration.key + ',add?: ' + (this.cache.indexOf(cacheItem) === -1));
 			if(this.cache.indexOf(cacheItem) === -1) {
 				this.cache.push(cacheItem);
 			}
 
-			//console.log('singletonLifecycle.set: cache size: ' + this.cache.length);
 			this.refCounts[cacheItem.registration.key] = this.refCounts[cacheItem.registration.key]+1 || 1;
 		},
 
@@ -119,7 +114,6 @@
 			if(canRelease) {
 				this.cache.splice(this.cache.indexOf(cacheItem), 1);
 				delete this.refCounts[cacheItem.registration.key];
-				//console.log('singletonLifecycle.release: cache size: ' + this.cache.length);
 			}
 			return canRelease;
 
@@ -141,9 +135,6 @@
 		},
 
 		set: function(cacheItem) {
-			console.log('uniqueLifecycle: set: ' + cacheItem.registration.key + ',add?: ' + (this.cache.indexOf(cacheItem) === -1));
-			// why add anything to the unique cache when there's no fucking reuse? c'mon man!!!!
-			//console.log('uniqueLifecycle.set: cache size: ' + this.cache.length);
 			if(this.cache.indexOf(cacheItem) === -1) {
 				this.cache.push(cacheItem);
 			}
@@ -151,7 +142,6 @@
 
 		release: function(cacheItem) {
 			this.cache.splice(this.cache.indexOf(cacheItem), 1);
-			//console.log('uniqueLifecycle.release: cache size: ' + this.cache.length);
 			return true;
 		},
 
@@ -428,14 +418,10 @@
 				var index = this.parent.children.indexOf(this);
 				if(index !== -1) {
 					this.parent.children.splice(index, 1);
-					console.log('removed child. new length: ' + this.parent.children.length);
 				}
 			}
 		
-		/* DOR WAS HERE 444 */	
-/*			this.lifecycles = null;
-
-*/			return true;
+			return true;
 		},
 
 		create: function(options) {

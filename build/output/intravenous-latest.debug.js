@@ -1,4 +1,4 @@
-// Intravenous JavaScript library v0.1.9-beta
+// Intravenous JavaScript library v0.1.10-beta
 // (c) Roy Jacobs
 // License: MIT (http://www.opensource.org/licenses/mit-license.php)
 
@@ -30,7 +30,7 @@ var exportSymbol = function(path, object) {
 var exportProperty = function(owner, publicName, object) {
   owner[publicName] = object;
 };
-intravenous.version = "0.1.9-beta";
+intravenous.version = "0.1.10-beta";
 exportSymbol('version', intravenous.version);
 (function() {
 	"use strict";
@@ -83,10 +83,8 @@ exportSymbol('version', intravenous.version);
 		},
 
 		set: function(cacheItem) {
-			console.log('perRequestLifecycle: set: ' + cacheItem.registration.key + ', tag: ' + this.tag +', add?: ' + (this.cache.indexOf(cacheItem) === -1));
 			if(this.cache.indexOf(cacheItem) === -1) {
 				this.cache.push(cacheItem);
-				//console.log('perRequestLifecycle.set: cache size: ' + this.cache.length);
 				cacheItem.tag = this.tag;
 			}
 
@@ -100,7 +98,6 @@ exportSymbol('version', intravenous.version);
 			if(canRelease) {
 				this.cache.splice(this.cache.indexOf(cacheItem), 1);
 				delete this.refCounts[cacheItem.tag][cacheItem.registration.key];
-				//console.log('perRequestLifecycle.release: cache size: ' + this.cache.length);
 			}
 			return canRelease;
 		},
@@ -138,12 +135,10 @@ exportSymbol('version', intravenous.version);
 		},
 
 		set: function(cacheItem) {
-			console.log('singletonLifecycle: set: ' + cacheItem.registration.key + ',add?: ' + (this.cache.indexOf(cacheItem) === -1));
 			if(this.cache.indexOf(cacheItem) === -1) {
 				this.cache.push(cacheItem);
 			}
 
-			//console.log('singletonLifecycle.set: cache size: ' + this.cache.length);
 			this.refCounts[cacheItem.registration.key] = this.refCounts[cacheItem.registration.key]+1 || 1;
 		},
 
@@ -153,7 +148,6 @@ exportSymbol('version', intravenous.version);
 			if(canRelease) {
 				this.cache.splice(this.cache.indexOf(cacheItem), 1);
 				delete this.refCounts[cacheItem.registration.key];
-				//console.log('singletonLifecycle.release: cache size: ' + this.cache.length);
 			}
 			return canRelease;
 
@@ -175,9 +169,6 @@ exportSymbol('version', intravenous.version);
 		},
 
 		set: function(cacheItem) {
-			console.log('uniqueLifecycle: set: ' + cacheItem.registration.key + ',add?: ' + (this.cache.indexOf(cacheItem) === -1));
-			// why add anything to the unique cache when there's no fucking reuse? c'mon man!!!!
-			//console.log('uniqueLifecycle.set: cache size: ' + this.cache.length);
 			if(this.cache.indexOf(cacheItem) === -1) {
 				this.cache.push(cacheItem);
 			}
@@ -185,7 +176,6 @@ exportSymbol('version', intravenous.version);
 
 		release: function(cacheItem) {
 			this.cache.splice(this.cache.indexOf(cacheItem), 1);
-			//console.log('uniqueLifecycle.release: cache size: ' + this.cache.length);
 			return true;
 		},
 
@@ -462,14 +452,10 @@ exportSymbol('version', intravenous.version);
 				var index = this.parent.children.indexOf(this);
 				if(index !== -1) {
 					this.parent.children.splice(index, 1);
-					console.log('removed child. new length: ' + this.parent.children.length);
 				}
 			}
 		
-		/* DOR WAS HERE 444 */	
-/*			this.lifecycles = null;
-
-*/			return true;
+			return true;
 		},
 
 		create: function(options) {
