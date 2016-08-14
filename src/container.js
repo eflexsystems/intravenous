@@ -49,18 +49,21 @@
 		},
 
 		set: function(cacheItem) {
-			this.cache.push(cacheItem);
-			cacheItem.tag = this.tag;
+			if(this.cache.indexOf(cacheItem) === -1) {
+				this.cache.push(cacheItem);
+				cacheItem.tag = this.tag;
+			}
 
 			this.refCounts[cacheItem.tag] = this.refCounts[cacheItem.tag] || {};
 			this.refCounts[cacheItem.tag][cacheItem.registration.key] = this.refCounts[cacheItem.tag][cacheItem.registration.key]+1 || 1;
 		},
 
 		release: function(cacheItem) {
-			var canRelease = !--this.refCounts[cacheItem.tag][cacheItem.registration.key];;
+			var canRelease = this.refCounts[cacheItem.tag][cacheItem.registration.key] === undefined || (!--this.refCounts[cacheItem.tag][cacheItem.registration.key]);
 
 			if(canRelease) {
 				this.cache.splice(this.cache.indexOf(cacheItem), 1);
+				delete this.refCounts[cacheItem.tag][cacheItem.registration.key];
 			}
 			return canRelease;
 		},
@@ -98,15 +101,19 @@
 		},
 
 		set: function(cacheItem) {
-			this.cache.push(cacheItem);
+			if(this.cache.indexOf(cacheItem) === -1) {
+				this.cache.push(cacheItem);
+			}
+
 			this.refCounts[cacheItem.registration.key] = this.refCounts[cacheItem.registration.key]+1 || 1;
 		},
 
 		release: function(cacheItem) {
-			var canRelease = !--this.refCounts[cacheItem.registration.key];
+			var canRelease = this.refCounts[cacheItem.registration.key] === undefined || (!--this.refCounts[cacheItem.registration.key]);
 
 			if(canRelease) {
 				this.cache.splice(this.cache.indexOf(cacheItem), 1);
+				delete this.refCounts[cacheItem.registration.key];
 			}
 			return canRelease;
 
@@ -128,7 +135,9 @@
 		},
 
 		set: function(cacheItem) {
-			this.cache.push(cacheItem);
+			if(this.cache.indexOf(cacheItem) === -1) {
+				this.cache.push(cacheItem);
+			}
 		},
 
 		release: function(cacheItem) {
@@ -185,6 +194,7 @@
 
 		dispose: function() {
 			this.container.dispose();
+			this.container = null;
 		}
 	};
 
@@ -410,7 +420,7 @@
 					this.parent.children.splice(index, 1);
 				}
 			}
-			
+		
 			return true;
 		},
 

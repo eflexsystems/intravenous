@@ -1,4 +1,4 @@
-// Intravenous JavaScript library v0.1.9-beta
+// Intravenous JavaScript library v0.1.10-beta
 // (c) Roy Jacobs
 // License: MIT (http://www.opensource.org/licenses/mit-license.php)
 
@@ -30,7 +30,7 @@ var exportSymbol = function(path, object) {
 var exportProperty = function(owner, publicName, object) {
   owner[publicName] = object;
 };
-intravenous.version = "0.1.9-beta";
+intravenous.version = "0.1.10-beta";
 exportSymbol('version', intravenous.version);
 (function() {
 	"use strict";
@@ -83,18 +83,21 @@ exportSymbol('version', intravenous.version);
 		},
 
 		set: function(cacheItem) {
-			this.cache.push(cacheItem);
-			cacheItem.tag = this.tag;
+			if(this.cache.indexOf(cacheItem) === -1) {
+				this.cache.push(cacheItem);
+				cacheItem.tag = this.tag;
+			}
 
 			this.refCounts[cacheItem.tag] = this.refCounts[cacheItem.tag] || {};
 			this.refCounts[cacheItem.tag][cacheItem.registration.key] = this.refCounts[cacheItem.tag][cacheItem.registration.key]+1 || 1;
 		},
 
 		release: function(cacheItem) {
-			var canRelease = !--this.refCounts[cacheItem.tag][cacheItem.registration.key];;
+			var canRelease = this.refCounts[cacheItem.tag][cacheItem.registration.key] === undefined || (!--this.refCounts[cacheItem.tag][cacheItem.registration.key]);
 
 			if(canRelease) {
 				this.cache.splice(this.cache.indexOf(cacheItem), 1);
+				delete this.refCounts[cacheItem.tag][cacheItem.registration.key];
 			}
 			return canRelease;
 		},
@@ -132,15 +135,19 @@ exportSymbol('version', intravenous.version);
 		},
 
 		set: function(cacheItem) {
-			this.cache.push(cacheItem);
+			if(this.cache.indexOf(cacheItem) === -1) {
+				this.cache.push(cacheItem);
+			}
+
 			this.refCounts[cacheItem.registration.key] = this.refCounts[cacheItem.registration.key]+1 || 1;
 		},
 
 		release: function(cacheItem) {
-			var canRelease = !--this.refCounts[cacheItem.registration.key];
+			var canRelease = this.refCounts[cacheItem.registration.key] === undefined || (!--this.refCounts[cacheItem.registration.key]);
 
 			if(canRelease) {
 				this.cache.splice(this.cache.indexOf(cacheItem), 1);
+				delete this.refCounts[cacheItem.registration.key];
 			}
 			return canRelease;
 
@@ -162,7 +169,9 @@ exportSymbol('version', intravenous.version);
 		},
 
 		set: function(cacheItem) {
-			this.cache.push(cacheItem);
+			if(this.cache.indexOf(cacheItem) === -1) {
+				this.cache.push(cacheItem);
+			}
 		},
 
 		release: function(cacheItem) {
@@ -219,6 +228,7 @@ exportSymbol('version', intravenous.version);
 
 		dispose: function() {
 			this.container.dispose();
+			this.container = null;
 		}
 	};
 
@@ -444,7 +454,7 @@ exportSymbol('version', intravenous.version);
 					this.parent.children.splice(index, 1);
 				}
 			}
-			
+		
 			return true;
 		},
 
