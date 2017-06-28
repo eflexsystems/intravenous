@@ -1,23 +1,23 @@
 {
-  "name": "intravenous",
+  "name": "eflex-intravenous",
   "directories": {
 	"lib": "./lib"
   },
   "main": "./lib/intravenous.js",
-  "version": "0.1.9-beta",
+  "version": "1.0.0",
   "description": "Lightweight dependency injection for Javascript",
-  "homepage": "http://royjacobs.github.com/intravenous/",
+  "homepage": "https://github.com/eflexsystems/intravenous/",
   "keywords": [
     "di",
     "ioc",
     "injection"
   ],
-  "author": "Roy Jacobs <hello@royjacobs.org> (http://www.royjacobs.org)",
+  "author": "Jacob Jewell <jacobjewell@eflexsystems.com>",
   "license": "MIT",
   "repositories": [
     {
       "type": "git",
-      "url": "https://github.com/dorr-fg/intravenous"
+      "url": "https://github.com/eflexsystems/intravenous"
     }
   ],
   "dependencies": {},
