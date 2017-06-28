@@ -135,9 +135,7 @@
 		},
 
 		set: function(cacheItem) {
-			if(this.cache.indexOf(cacheItem) === -1) {
-				this.cache.push(cacheItem);
-			}
+      return;
 		},
 
 		release: function(cacheItem) {
