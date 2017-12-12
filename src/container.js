@@ -16,66 +16,6 @@
 	};
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	var perRequestLifecycle = function(container) {
-		this.container = container;
-		this.cache = [];
-		this.refCounts = {};
-
-		this.tag = 0;
-		this.visitedKeys = {};
-		this.visitedKeysArray = [];
-	};
-
-	perRequestLifecycle.prototype = {
-		get: function(key) {
-			// Gets an instance for 'key' that has already been retrieved during the current resolve. The current resolve is identified by 'tag'.
-			// If there is no available instance, it will also do a check to determine if there's a circular reference during.
-			for (var t=0,len = this.cache.length;t<len;t++) {
-				var i = this.cache[t];
-				if (i.registration.key === key && i.tag === this.tag) {
-					if (!i.instance) break;
-					this.set(i);
-					return i.instance;
-				}
-			}
-
-			this.visitedKeysArray.push(key);
-			if (this.visitedKeys[key]) {
-				throw new Error("Circular reference: " + this.visitedKeysArray.join(" --> "));
-			}
-			this.visitedKeys[key] = true;
-
-			return null;
-		},
-
-		set: function(cacheItem) {
-			if(this.cache.indexOf(cacheItem) === -1) {
-				this.cache.push(cacheItem);
-				cacheItem.tag = this.tag;
-			}
-
-			this.refCounts[cacheItem.tag] = this.refCounts[cacheItem.tag] || {};
-			this.refCounts[cacheItem.tag][cacheItem.registration.key] = this.refCounts[cacheItem.tag][cacheItem.registration.key]+1 || 1;
-		},
-
-		release: function(cacheItem) {
-			var canRelease = this.refCounts[cacheItem.tag][cacheItem.registration.key] === undefined || (!--this.refCounts[cacheItem.tag][cacheItem.registration.key]);
-
-			if(canRelease) {
-				this.cache.splice(this.cache.indexOf(cacheItem), 1);
-				delete this.refCounts[cacheItem.tag][cacheItem.registration.key];
-			}
-			return canRelease;
-		},
-
-		resolveStarted: function(key) {
-			this.tag++;
-			this.visitedKeys = {};
-			this.visitedKeysArray = [];
-		}
-	};
-
-	///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	var singletonLifecycle = function(container, parentLifecycle) {
 		this.container = container;
 		this.cache = [];
@@ -94,7 +34,7 @@
 					return i.instance;
 				}
 			}
-			
+
 			// If the singleton wasn't found, maybe it is available in the parent
 			if (this.parent) return this.parent.get(key);
 			else return null;
@@ -169,7 +109,7 @@
 	var factoryInstance = function(container, key) {
 		this.container = container.create();
 		this.key = key;
-		
+
 		exportProperty(this, "dispose", this.dispose);
 		exportProperty(this, "get", this.get);
 		exportProperty(this, "use", this.use);
@@ -200,7 +140,7 @@
 	var factory = function(container, key) {
 		this.container = container;
 		this.key = key;
-		
+
 		exportProperty(this, "dispose", this.dispose);
 		exportProperty(this, "get", this.get);
 		exportProperty(this, "use", this.use);
@@ -240,7 +180,6 @@
 		this.registry = {};
 		this.parent = parent;
 		this.lifecycles = {
-			"perRequest": new perRequestLifecycle(this),
 			"singleton": new singletonLifecycle(this, parent ? parent.lifecycles["singleton"] : null),
 			"unique": new uniqueLifecycle(this)
 		};
@@ -377,7 +316,7 @@
 					return;
 				}
 			}
-			this.registry[key] = new registration(key, this, value, lifecycle || "perRequest");
+			this.registry[key] = new registration(key, this, value, lifecycle || "unique");
 		},
 
 		get: function(key) {
@@ -418,7 +357,7 @@
 					this.parent.children.splice(index, 1);
 				}
 			}
-		
+
 			return true;
 		},
 
