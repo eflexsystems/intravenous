@@ -1,5 +1,5 @@
 {
-  "name": "eflex-intravenous",
+  "name": "@eflexsystems/intravenous",
   "directories": {
 	"lib": "./lib"
   },
@@ -27,6 +27,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/dorr-fg/intravenous.git"
+    "url": "git://github.com/eflexsystems/intravenous.git"
   }
 }
